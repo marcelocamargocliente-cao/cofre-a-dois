@@ -30,6 +30,21 @@ export function Nos({ userId, casalId }: NosProps) {
 
   useEffect(() => { carregarPergunta(); }, [casalId, userId]);
 
+  // Realtime — quando parceiro responder, revelar automaticamente
+  useEffect(() => {
+    if (!casalId) return;
+    const channel = supabase
+      .channel(`nos-${casalId}`)
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'respostas',
+        filter: `casal_id=eq.${casalId}`,
+      }, () => { carregarPergunta(); })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [casalId]);
+
   const carregarPergunta = async () => {
     const hoje = new Date().toISOString().split('T')[0];
 

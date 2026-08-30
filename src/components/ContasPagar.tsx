@@ -30,6 +30,21 @@ export function ContasPagar({ userId, casalId }: ContasPagarProps) {
 
   useEffect(() => { carregar(); }, [casalId]);
 
+  // Realtime — contas atualizadas em tempo real
+  useEffect(() => {
+    if (!casalId) return;
+    const channel = supabase
+      .channel(`contas-${casalId}`)
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'contas_a_pagar',
+        filter: `casal_id=eq.${casalId}`,
+      }, () => { carregar(); })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [casalId]);
+
   const carregar = async () => {
     const { data } = await supabase
       .from('contas_a_pagar').select('*')

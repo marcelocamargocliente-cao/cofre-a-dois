@@ -45,7 +45,38 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
   const [modalConvite, setModalConvite] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { carregarDados(); }, [userId]);
+  useEffect(() => {
+    carregarDados();
+  }, [userId]);
+
+  // Realtime — reagir a qualquer mudança no cofre em tempo real
+  useEffect(() => {
+    if (!casalId) return;
+
+    const channel = supabase
+      .channel(`cofre-${casalId}`)
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'lancamentos',
+        filter: `casal_id=eq.${casalId}`,
+      }, () => { carregarDados(); })
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'contas_a_pagar',
+        filter: `casal_id=eq.${casalId}`,
+      }, () => { carregarDados(); })
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'membros',
+        filter: `casal_id=eq.${casalId}`,
+      }, () => { carregarDados(); })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [casalId]);
 
   const carregarDados = async () => {
     try {
