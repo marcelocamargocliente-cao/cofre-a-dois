@@ -199,7 +199,7 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
             {lancamentos.length === 0
               ? <p style={{ fontSize: 13, color: '#8A8578', textAlign: 'center', padding: '16px 0' }}>Nenhum lançamento ainda</p>
               : lancamentos.slice(0, 5).map(l => (
-                <div key={l.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <div key={l.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', paddingRight: 60, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                   <div>
                     <p style={{ fontSize: 14, color: '#F2EFE6', margin: 0 }}>{l.descricao}</p>
                     <p style={{ fontSize: 11, color: '#8A8578', margin: '2px 0 0' }}>
@@ -224,7 +224,7 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
 
       {/* FAB */}
       {aba === 'inicio' && (
-        <button onClick={() => setModalLancar(true)} style={{ position: 'fixed', bottom: 88, right: 20, width: 52, height: 52, borderRadius: '50%', background: 'linear-gradient(180deg,#F5D97A 0%,#D4AF37 45%,#8C6D1F 100%)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 20px rgba(212,175,55,0.4)', zIndex: 15 }}>
+        <button onClick={() => setModalLancar(true)} style={{ position: 'fixed', bottom: 96, right: 16, width: 52, height: 52, borderRadius: '50%', background: 'linear-gradient(180deg,#F5D97A 0%,#D4AF37 45%,#8C6D1F 100%)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 20px rgba(212,175,55,0.4)', zIndex: 15 }}>
           <Plus size={24} color="#050505" />
         </button>
       )}
