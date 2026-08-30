@@ -29,33 +29,48 @@ export function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-sm flex flex-col gap-8">
-        <div className="text-center">
-          <h1 className="font-anton text-4xl gradiente-ouro mb-2 tracking-wide">COFRE A DOIS</h1>
-          <p className="text-texto-fraco text-sm">Finanças compartilhadas para casais</p>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, background: 'radial-gradient(ellipse at top, #1a1200 0%, #050505 60%)' }}>
+      <div style={{ width: '100%', maxWidth: 360, display: 'flex', flexDirection: 'column', gap: 32 }}>
+
+        {/* Logo */}
+        <div style={{ textAlign: 'center' }}>
+          <h1 className="titulo-principal gradiente-ouro-xl" style={{ marginBottom: 8 }}>
+            COFRE<br />A DOIS
+          </h1>
+          <p className="subtitulo" style={{ marginTop: 12 }}>
+            Finanças compartilhadas para casais
+          </p>
         </div>
+
+        {/* Card */}
         <div className="card">
-          <h2 className="text-xl font-semibold mb-6">{isLogin ? 'Entrar no cofre' : 'Criar minha conta'}</h2>
-          <form onSubmit={handleAuth} className="flex flex-col gap-4">
+          <h2 style={{ fontSize: 18, fontWeight: 600, color: '#F2EFE6', marginBottom: 20 }}>
+            {isLogin ? 'Entrar no cofre' : 'Criar minha conta'}
+          </h2>
+
+          <form onSubmit={handleAuth} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div>
-              <label className="block text-sm text-texto-fraco mb-1" htmlFor="email">E-mail</label>
-              <input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="seu@email.com" />
+              <label style={{ fontSize: 12, color: '#8A8578', display: 'block', marginBottom: 6, letterSpacing: '0.05em', textTransform: 'uppercase' }}>E-mail</label>
+              <input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="seu@email.com" />
             </div>
             <div>
-              <label className="block text-sm text-texto-fraco mb-1" htmlFor="password">Senha</label>
-              <input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
+              <label style={{ fontSize: 12, color: '#8A8578', display: 'block', marginBottom: 6, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Senha</label>
+              <input type="password" required value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" />
             </div>
-            {error && <p className="text-vermelho text-sm mt-1">{error}</p>}
-            <button type="submit" className="btn-primario mt-4" disabled={loading}>
-              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (isLogin ? 'Entrar' : 'Cadastrar')}
+
+            {error && <p style={{ color: '#C2453D', fontSize: 13 }}>{error}</p>}
+
+            <button type="submit" className="btn-primario" disabled={loading} style={{ marginTop: 8 }}>
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" style={{ margin: '0 auto' }} /> : (isLogin ? 'Entrar' : 'Cadastrar')}
             </button>
           </form>
-          <div className="mt-6 text-center">
-            <button onClick={() => setIsLogin(!isLogin)} className="text-sm text-texto-fraco hover:text-ouro transition-colors">
-              {isLogin ? 'Ainda não tem conta? Cadastre-se' : 'Já tem conta? Entre'}
-            </button>
-          </div>
+
+          <div className="divisor-ouro" style={{ margin: '20px 0' }} />
+
+          <button onClick={() => setIsLogin(!isLogin)} style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, color: '#8A8578', letterSpacing: '0.02em' }}>
+            {isLogin ? 'Ainda não tem conta? ' : 'Já tem conta? '}
+            <span style={{ color: '#D4AF37', fontWeight: 600 }}>{isLogin ? 'Cadastre-se' : 'Entre'}</span>
+          </button>
         </div>
       </div>
     </div>
