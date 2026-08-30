@@ -41,7 +41,7 @@ export function AssinaturaRequerida({ onSignOut }: AssinaturaRequeridaProps) {
           </p>
 
           <a
-            href="https://pay.kiwify.com.br/cofre-a-dois"
+            href="https://pay.kiwify.com.br/sjlCclP"
             target="_blank"
             rel="noopener noreferrer"
             style={{
