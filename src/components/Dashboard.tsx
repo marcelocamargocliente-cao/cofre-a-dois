@@ -8,7 +8,9 @@ import { Notifs } from '../lib/useNotificacoes';
 import { Historico } from './Historico';
 import { ContasPagar } from './ContasPagar';
 import { Nos } from './Nos';
-import { Eye, EyeOff, Plus, Home, CreditCard, FileText, Heart, LogOut, UserPlus, History } from 'lucide-react';
+import { Cofrinho } from './Cofrinho';
+import { AcertoMes } from './AcertoMes';
+import { Eye, EyeOff, Plus, Home, CreditCard, FileText, Heart, LogOut, UserPlus, History, PiggyBank, Scale } from 'lucide-react';
 
 interface DashboardProps {
   userId: string;
@@ -204,12 +206,14 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
   );
 
   const Navbar = () => (
-    <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, backgroundColor: '#0a0a0a', borderTop: '1px solid rgba(212,175,55,0.15)', display: 'flex', justifyContent: 'space-around', padding: '8px 0 20px', zIndex: 20 }}>
+    <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, backgroundColor: '#0a0a0a', borderTop: '1px solid rgba(212,175,55,0.15)', display: 'flex', justifyContent: 'space-around', padding: '8px 0 20px', zIndex: 20, overflowX: 'auto' }}>
       {[
         { id: 'inicio', icon: Home, label: 'Início' },
         { id: 'lancar', icon: CreditCard, label: 'Lançar', action: () => setModalLancar(true) },
         { id: 'historico', icon: History, label: 'Histórico' },
         { id: 'contas', icon: FileText, label: 'Contas' },
+        { id: 'cofrinhos', icon: PiggyBank, label: 'Cofrinhos' },
+        { id: 'acerto', icon: Scale, label: 'Acerto' },
         { id: 'nos', icon: Heart, label: 'Nós' },
       ].map(a => (
         <button key={a.id} onClick={() => { setAba(a.id); a.action?.(); }}
@@ -270,6 +274,12 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
 
       {/* CONTAS */}
       {aba === 'contas' && casalId && <ContasPagar userId={userId} casalId={casalId} />}
+
+      {/* COFRINHOS */}
+      {aba === 'cofrinhos' && casalId && <Cofrinho userId={userId} casalId={casalId} />}
+
+      {/* ACERTO */}
+      {aba === 'acerto' && casalId && <AcertoMes userId={userId} casalId={casalId} />}
 
       {/* NÓS */}
       {aba === 'nos' && casalId && <Nos userId={userId} casalId={casalId} />}
