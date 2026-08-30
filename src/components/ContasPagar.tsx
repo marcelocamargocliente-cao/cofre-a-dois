@@ -22,7 +22,7 @@ export function ContasPagar({ userId, casalId }: ContasPagarProps) {
   const [loading, setLoading] = useState(true);
   const [modalNova, setModalNova] = useState(false);
   const [descricao, setDescricao] = useState('');
-  const [valor, setValor] = useState('');
+  const [valorCentavos, setValorCentavos] = useState('');
   const [vencimento, setVencimento] = useState('');
   const [recorrencia, setRecorrencia] = useState('unica');
   const [salvando, setSalvando] = useState(false);
@@ -54,13 +54,13 @@ export function ContasPagar({ userId, casalId }: ContasPagarProps) {
     const { error } = await supabase.from('contas_a_pagar').insert({
       casal_id: casalId,
       descricao: descricao.trim(),
-      valor: parseFloat(valor.replace(',', '.')),
+      valor: parseInt(valorCentavos || '0') / 100,
       vencimento,
       recorrencia,
       responsavel_id: userId,
     });
     if (error) { setErro(error.message); setSalvando(false); return; }
-    setDescricao(''); setValor(''); setVencimento(''); setRecorrencia('unica');
+    setDescricao(''); setValorCentavos(''); setVencimento(''); setRecorrencia('unica');
     setModalNova(false);
     carregar();
     setSalvando(false);
@@ -143,7 +143,17 @@ export function ContasPagar({ userId, casalId }: ContasPagarProps) {
               </div>
               <div>
                 <label style={{ fontSize: 12, color: '#8A8578', display: 'block', marginBottom: 6 }}>Valor (R$)</label>
-                <input type="number" value={valor} onChange={e => setValor(e.target.value)} placeholder="0,00" style={{ width: '100%', padding: '12px 14px', backgroundColor: '#1a1a1a', border: '1px solid rgba(212,175,55,0.25)', borderRadius: 12, color: '#F2EFE6', fontSize: 15, boxSizing: 'border-box', outline: 'none' }} />
+                <input
+                  type="tel"
+                  inputMode="numeric"
+                  value={valorCentavos ? new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(parseInt(valorCentavos) / 100) : ''}
+                  onChange={e => {
+                    const raw = e.target.value.replace(/\D/g, '');
+                    setValorCentavos(raw);
+                  }}
+                  placeholder="R$ 0,00"
+                  style={{ width: '100%', padding: '12px 14px', backgroundColor: '#1a1a1a', border: '1px solid rgba(212,175,55,0.25)', borderRadius: 12, color: '#F2EFE6', fontSize: 18, fontFamily: 'Anton, sans-serif', boxSizing: 'border-box', outline: 'none' }}
+                />
               </div>
               <div>
                 <label style={{ fontSize: 12, color: '#8A8578', display: 'block', marginBottom: 6 }}>Vencimento</label>
