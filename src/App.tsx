@@ -66,5 +66,5 @@ function AppContent() {
 
   if (!session) return <Auth />;
   if (hasCasal === false) return <Onboarding userId={session.user.id} onComplete={() => checkMembership(session.user.id)} />;
-  return <Dashboard onSignOut={handleSignOut} />;
+  return <Dashboard userId={session.user.id} onSignOut={handleSignOut} />;
 }
