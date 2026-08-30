@@ -1,6 +1,84 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Plus, Check, X } from 'lucide-react';
+import { useRef, useCallback } from 'react';
+
+function useConfete() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const disparar = useCallback((origemX: number, origemY: number) => {
+    const cv = canvasRef.current;
+    if (!cv) return;
+    const ctx = cv.getContext('2d');
+    if (!ctx) return;
+
+    // Cores do tema ouro + verde comemorativo
+    const cores = ['#F5D97A', '#D4AF37', '#8C6D1F', '#3FA96A', '#ffffff', '#F2EFE6'];
+
+    cv.width = window.innerWidth;
+    cv.height = window.innerHeight;
+
+    const papeis = Array.from({ length: 120 }, () => ({
+      x: origemX,
+      y: origemY,
+      vx: (Math.random() - 0.5) * 14,
+      vy: Math.random() * -12 - 4,
+      giro: Math.random() * 6,
+      dGiro: (Math.random() - 0.5) * 0.35,
+      cor: cores[Math.floor(Math.random() * cores.length)],
+      l: 4 + Math.random() * 6,
+      a: 7 + Math.random() * 8,
+    }));
+
+    let animId: number;
+
+    const rodar = () => {
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      let vivos = 0;
+
+      papeis.forEach(p => {
+        p.vy += 0.32;
+        p.vx *= 0.995;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.giro += p.dGiro;
+        if (p.y < cv.height + 30) vivos++;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.giro);
+        ctx.fillStyle = p.cor;
+        ctx.fillRect(-p.l / 2, -p.a / 2, p.l, p.a);
+        ctx.restore();
+      });
+
+      if (vivos > 0) {
+        animId = requestAnimationFrame(rodar);
+      } else {
+        ctx.clearRect(0, 0, cv.width, cv.height);
+      }
+    };
+
+    rodar();
+    return () => cancelAnimationFrame(animId);
+  }, []);
+
+  const Canvas = () => (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        pointerEvents: 'none',
+        zIndex: 999,
+      }}
+    />
+  );
+
+  return { Canvas, disparar };
+}
 
 interface ContasPagarProps {
   userId: string;
@@ -20,6 +98,7 @@ interface Conta {
 export function ContasPagar({ userId, casalId }: ContasPagarProps) {
   const [contas, setContas] = useState<Conta[]>([]);
   const [loading, setLoading] = useState(true);
+  const { Canvas: ConfeteCanvas, disparar: dispararConfete } = useConfete();
   const [modalNova, setModalNova] = useState(false);
   const [descricao, setDescricao] = useState('');
   const [valorCentavos, setValorCentavos] = useState('');
@@ -55,11 +134,18 @@ export function ContasPagar({ userId, casalId }: ContasPagarProps) {
     setLoading(false);
   };
 
-  const marcarPago = async (id: string) => {
+  const marcarPago = async (id: string, e: React.MouseEvent) => {
+    const btn = e.currentTarget as HTMLElement;
+    const rect = btn.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
     await supabase.from('contas_a_pagar')
       .update({ pago: true, pago_em: new Date().toISOString() })
       .eq('id', id);
+
     setContas(prev => prev.filter(c => c.id !== id));
+    dispararConfete(cx, cy);
   };
 
   const salvarNova = async () => {
@@ -103,7 +189,7 @@ export function ContasPagar({ userId, casalId }: ContasPagarProps) {
           const dias = diasRestantes(c.vencimento);
           return (
             <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px', backgroundColor: '#111', border: '1px solid rgba(212,175,55,0.15)', borderRadius: 12, marginBottom: 8 }}>
-              <button onClick={() => marcarPago(c.id)} style={{ width: 28, height: 28, borderRadius: '50%', border: `2px solid ${cor}`, backgroundColor: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <button onClick={(e) => marcarPago(c.id, e)} style={{ width: 28, height: 28, borderRadius: '50%', border: `2px solid ${cor}`, backgroundColor: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <Check size={14} color={cor} />
               </button>
               <div style={{ flex: 1 }}>
@@ -122,6 +208,7 @@ export function ContasPagar({ userId, casalId }: ContasPagarProps) {
 
   return (
     <div style={{ padding: '20px 16px', paddingBottom: 100 }}>
+      <ConfeteCanvas />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
         <h2 style={{ fontFamily: 'Anton, sans-serif', fontSize: 22, color: '#D4AF37', margin: 0 }}>CONTAS</h2>
         <button onClick={() => setModalNova(true)} style={{ display: 'flex', alignItems: 'center', gap: 6, backgroundColor: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', borderRadius: 10, padding: '8px 14px', color: '#D4AF37', cursor: 'pointer', fontSize: 13 }}>
