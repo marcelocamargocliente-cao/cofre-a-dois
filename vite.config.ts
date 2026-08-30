@@ -10,7 +10,7 @@ export default defineConfig({
       manifest: {
         name: 'Cofre a Dois',
         short_name: 'Cofre',
-        description: 'Finanças compartilhadas para casais',
+        description: 'Financas compartilhadas para casais',
         theme_color: '#050505',
         background_color: '#050505',
         display: 'standalone',

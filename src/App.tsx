@@ -23,12 +23,12 @@ export default function App() {
         COFRE A DOIS
       </h1>
       <p style={{ color: '#8A8578', fontSize: 16 }}>
-        Finanças compartilhadas para casais
+        Financas compartilhadas para casais
       </p>
       <div className="card" style={{ padding: 20, textAlign: 'center', minWidth: 280 }}>
         {status === 'loading' && <p style={{ color: '#8A8578' }}>Conectando ao banco...</p>}
-        {status === 'ok' && <p style={{ color: '#3FA96A' }}>✓ Banco conectado com sucesso</p>}
-        {status === 'erro' && <p style={{ color: '#C2453D' }}>✗ Erro ao conectar ao banco</p>}
+        {status === 'ok' && <p style={{ color: '#3FA96A' }}>Banco conectado com sucesso</p>}
+        {status === 'erro' && <p style={{ color: '#C2453D' }}>Erro ao conectar ao banco</p>}
       </div>
     </div>
   )
