@@ -7,10 +7,9 @@ import { PedirNotificacao } from './PedirNotificacao';
 import { Notifs } from '../lib/useNotificacoes';
 import { Historico } from './Historico';
 import { ContasPagar } from './ContasPagar';
-import { Nos } from './Nos';
 import { Cofrinho } from './Cofrinho';
 import { AcertoMes } from './AcertoMes';
-import { Eye, EyeOff, Plus, Home, CreditCard, FileText, Heart, LogOut, UserPlus, History, PiggyBank, Scale } from 'lucide-react';
+import { Eye, EyeOff, Plus, Home, CreditCard, FileText, LogOut, UserPlus, History, PiggyBank, Scale } from 'lucide-react';
 
 interface DashboardProps {
   userId: string;
@@ -214,7 +213,6 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
         { id: 'contas', icon: FileText, label: 'Contas' },
         { id: 'cofrinhos', icon: PiggyBank, label: 'Cofrinhos' },
         { id: 'acerto', icon: Scale, label: 'Acerto' },
-        { id: 'nos', icon: Heart, label: 'Nós' },
       ].map(a => (
         <button key={a.id} onClick={() => { setAba(a.id); a.action?.(); }}
           style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: '4px 16px', color: aba === a.id ? '#D4AF37' : '#8A8578' }}>
@@ -280,9 +278,6 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
 
       {/* ACERTO */}
       {aba === 'acerto' && casalId && <AcertoMes userId={userId} casalId={casalId} />}
-
-      {/* NÓS */}
-      {aba === 'nos' && casalId && <Nos userId={userId} casalId={casalId} />}
 
       {/* FAB */}
       {aba === 'inicio' && (
