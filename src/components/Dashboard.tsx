@@ -211,7 +211,7 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
   );
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#050505' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: 'transparent', position: 'relative', zIndex: 1 }}>
       <Header />
 
       {/* INÍCIO */}

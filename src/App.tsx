@@ -5,6 +5,7 @@ import { Onboarding } from './components/Onboarding';
 import { Dashboard } from './components/Dashboard';
 import { Loader2 } from 'lucide-react';
 import type { Session } from '@supabase/supabase-js';
+import { ParticlasGlobal } from './components/ParticlasGlobal';
 
 export default function App() {
   return <AppContent />;
@@ -59,12 +60,28 @@ function AppContent() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-ouro animate-spin" />
+        <ParticlasGlobal />
+        <Loader2 className="w-8 h-8 text-ouro animate-spin" style={{ position: 'relative', zIndex: 1 }} />
       </div>
     );
   }
 
-  if (!session) return <Auth />;
-  if (hasCasal === false) return <Onboarding userId={session.user.id} onComplete={() => checkMembership(session.user.id)} />;
-  return <Dashboard userId={session.user.id} onSignOut={handleSignOut} />;
+  if (!session) return (
+    <>
+      <ParticlasGlobal />
+      <Auth />
+    </>
+  );
+  if (hasCasal === false) return (
+    <>
+      <ParticlasGlobal />
+      <Onboarding userId={session.user.id} onComplete={() => checkMembership(session.user.id)} />
+    </>
+  );
+  return (
+    <>
+      <ParticlasGlobal />
+      <Dashboard userId={session.user.id} onSignOut={handleSignOut} />
+    </>
+  );
 }
