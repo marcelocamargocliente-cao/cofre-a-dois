@@ -197,6 +197,7 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
       {[
         { id: 'inicio', icon: Home, label: 'Início' },
         { id: 'lancar', icon: CreditCard, label: 'Lançar', action: () => setModalLancar(true) },
+        { id: 'historico', icon: History, label: 'Histórico' },
         { id: 'contas', icon: FileText, label: 'Contas' },
         { id: 'nos', icon: Heart, label: 'Nós' },
       ].map(a => (
