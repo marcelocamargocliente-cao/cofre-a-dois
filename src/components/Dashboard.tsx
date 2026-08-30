@@ -3,6 +3,8 @@ import { supabase } from '../lib/supabase';
 import { LancarGasto } from './LancarGasto';
 import { Convite } from './Convite';
 import { EditarLancamento } from './EditarLancamento';
+import { PedirNotificacao } from './PedirNotificacao';
+import { Notifs } from '../lib/useNotificacoes';
 import { Historico } from './Historico';
 import { ContasPagar } from './ContasPagar';
 import { Nos } from './Nos';
@@ -59,11 +61,18 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
     const channel = supabase
       .channel(`cofre-${casalId}`)
       .on('postgres_changes', {
-        event: '*',
+        event: 'INSERT',
         schema: 'public',
         table: 'lancamentos',
         filter: `casal_id=eq.${casalId}`,
-      }, () => { carregarDados(); })
+      }, (payload) => {
+        carregarDados();
+        // Só notifica se não foi você quem lançou
+        if (payload.new && payload.new.criado_por !== userId) {
+          const fmt = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(payload.new.valor);
+          Notifs.gastoLancado(payload.new.descricao, fmt, 'Seu par');
+        }
+      })
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
@@ -272,6 +281,7 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
         </button>
       )}
 
+      <PedirNotificacao />
       <Navbar />
 
       {modalConvite && casalId && (

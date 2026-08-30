@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Heart, Send, Lock } from 'lucide-react';
+import { Notifs } from '../lib/useNotificacoes';
 
 interface NosProps {
   userId: string;
@@ -40,7 +41,12 @@ export function Nos({ userId, casalId }: NosProps) {
         schema: 'public',
         table: 'respostas',
         filter: `casal_id=eq.${casalId}`,
-      }, () => { carregarPergunta(); })
+      }, (payload) => {
+        carregarPergunta();
+        if (payload.new && payload.new.user_id !== userId) {
+          Notifs.parceiroRespondeu();
+        }
+      })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [casalId]);
