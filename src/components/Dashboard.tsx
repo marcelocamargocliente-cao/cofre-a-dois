@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { LancarGasto } from './LancarGasto';
+import { Convite } from './Convite';
 import { ContasPagar } from './ContasPagar';
 import { Nos } from './Nos';
-import { Eye, EyeOff, Plus, Home, CreditCard, FileText, Heart, LogOut } from 'lucide-react';
+import { Eye, EyeOff, Plus, Home, CreditCard, FileText, Heart, LogOut, UserPlus } from 'lucide-react';
 
 interface DashboardProps {
   userId: string;
@@ -41,6 +42,7 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
   const [valoresVisiveis, setValoresVisiveis] = useState(true);
   const [aba, setAba] = useState('inicio');
   const [modalLancar, setModalLancar] = useState(false);
+  const [modalConvite, setModalConvite] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { carregarDados(); }, [userId]);
@@ -143,6 +145,9 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
         <p style={{ fontSize: 11, color: '#8A8578', margin: 0 }}>{casalNome}</p>
       </div>
       <div style={{ display: 'flex', gap: 12 }}>
+        <button onClick={() => setModalConvite(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8A8578' }}>
+            <UserPlus size={18} />
+          </button>
         {aba === 'inicio' && (
           <button onClick={() => setValoresVisiveis(!valoresVisiveis)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8A8578' }}>
             {valoresVisiveis ? <Eye size={20} /> : <EyeOff size={20} />}
@@ -230,6 +235,10 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
       )}
 
       <Navbar />
+
+      {modalConvite && casalId && (
+        <Convite userId={userId} casalId={casalId} onClose={() => setModalConvite(false)} />
+      )}
 
       {modalLancar && casalId && (
         <LancarGasto userId={userId} casalId={casalId}
