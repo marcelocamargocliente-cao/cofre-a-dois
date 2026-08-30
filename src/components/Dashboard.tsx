@@ -248,7 +248,7 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
             {lancamentos.length === 0
               ? <p style={{ fontSize: 13, color: '#8A8578', textAlign: 'center', padding: '16px 0' }}>Nenhum lançamento ainda</p>
               : lancamentos.slice(0, 5).map(l => (
-                <div key={l.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', paddingRight: 60, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <div key={l.id} onClick={() => setEditandoLanc(l)} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', paddingRight: 60, borderBottom: '1px solid rgba(255,255,255,0.05)', cursor: 'pointer', transition: 'background 0.15s' }} onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'rgba(212,175,55,0.05)')} onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}>
                   <div>
                     <p style={{ fontSize: 14, color: '#F2EFE6', margin: 0 }}>{l.descricao}</p>
                     <p style={{ fontSize: 11, color: '#8A8578', margin: '2px 0 0' }}>
