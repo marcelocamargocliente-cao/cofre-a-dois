@@ -1,0 +1,22 @@
+name: Supabase Keep-Alive
+on:
+  schedule:
+    - cron: '0 8 * * 0,3,5'
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase para evitar pausa por inatividade
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          RESP=$(curl -s -o /dev/null -w "%{http_code}" -X GET "${SUPABASE_URL}/rest/v1/categorias?limit=1" -H "apikey: ${SUPABASE_ANON_KEY}" -H "Authorization: Bearer ${SUPABASE_ANON_KEY}")
+          echo "Status HTTP: $RESP"
+          if [ "$RESP" = "200" ]; then
+            echo "✓ Supabase ativo e respondendo"
+          else
+            echo "✗ Erro: $RESP"
+            exit 1
+          fi
