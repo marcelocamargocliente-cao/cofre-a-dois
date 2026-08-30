@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Plus, Check, X } from 'lucide-react';
+import { EditarConta } from './EditarConta';
 import { useRef, useCallback } from 'react';
 
 function useConfete() {
@@ -100,6 +101,7 @@ export function ContasPagar({ userId, casalId }: ContasPagarProps) {
   const [loading, setLoading] = useState(true);
   const { Canvas: ConfeteCanvas, disparar: dispararConfete } = useConfete();
   const [modalNova, setModalNova] = useState(false);
+  const [editandoConta, setEditandoConta] = useState<Conta | null>(null);
   const [descricao, setDescricao] = useState('');
   const [valorCentavos, setValorCentavos] = useState('');
   const [vencimento, setVencimento] = useState('');
@@ -188,7 +190,7 @@ export function ContasPagar({ userId, casalId }: ContasPagarProps) {
         {items.map(c => {
           const dias = diasRestantes(c.vencimento);
           return (
-            <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px', backgroundColor: '#111', border: '1px solid rgba(212,175,55,0.15)', borderRadius: 12, marginBottom: 8 }}>
+            <div key={c.id} onClick={() => setEditandoConta(c)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px', backgroundColor: '#111', border: '1px solid rgba(212,175,55,0.15)', borderRadius: 12, marginBottom: 8, cursor: 'pointer' }}>
               <button onClick={(e) => marcarPago(c.id, e)} style={{ width: 28, height: 28, borderRadius: '50%', border: `2px solid ${cor}`, backgroundColor: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <Check size={14} color={cor} />
               </button>
@@ -283,6 +285,14 @@ export function ContasPagar({ userId, casalId }: ContasPagarProps) {
             </button>
           </div>
         </div>
+      )}
+
+      {editandoConta && (
+        <EditarConta
+          conta={editandoConta}
+          onClose={() => setEditandoConta(null)}
+          onSalvo={() => { carregar(); setEditandoConta(null); }}
+        />
       )}
     </div>
   );

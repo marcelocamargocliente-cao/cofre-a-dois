@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { ChevronLeft, ChevronRight, TrendingDown, TrendingUp, CheckCircle, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, TrendingDown, TrendingUp, CheckCircle } from 'lucide-react';
+import { EditarLancamento } from './EditarLancamento';
 
 interface HistoricoProps {
   userId: string;
@@ -25,6 +26,7 @@ export function Historico({ userId, casalId }: HistoricoProps) {
   const [loading, setLoading] = useState(true);
   const [mesAtual, setMesAtual] = useState(new Date());
   const [filtro, setFiltro] = useState<'todos' | 'despesa' | 'receita' | 'contas'>('todos');
+  const [editando, setEditando] = useState<Evento | null>(null);
 
   useEffect(() => { carregar(); }, [casalId, mesAtual]);
 
@@ -209,7 +211,7 @@ export function Historico({ userId, casalId }: HistoricoProps) {
 
               {/* Itens do dia */}
               {items.map(evento => (
-                <div key={evento.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px', backgroundColor: '#111', border: '1px solid rgba(212,175,55,0.1)', borderRadius: 12, marginBottom: 8 }}>
+                <div key={evento.id} onClick={() => evento.tipo === 'lancamento' ? setEditando(evento) : null} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px', backgroundColor: '#111', border: '1px solid rgba(212,175,55,0.1)', borderRadius: 12, marginBottom: 8, cursor: evento.tipo === 'lancamento' ? 'pointer' : 'default', transition: 'border-color 0.2s' }}>
                   {/* Ícone */}
                   <div style={{ width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                     backgroundColor: evento.tipo === 'conta_paga' ? 'rgba(63,169,106,0.15)' :
@@ -248,6 +250,22 @@ export function Historico({ userId, casalId }: HistoricoProps) {
           ))
         )}
       </div>
+      {editando && editando.tipo === 'lancamento' && (
+        <EditarLancamento
+          lancamento={{
+            id: editando.id,
+            descricao: editando.descricao,
+            valor: editando.valor,
+            tipo: editando.subtipo as 'despesa' | 'receita',
+            data: editando.data,
+            categoria_id: null,
+            visibilidade: editando.visibilidade || 'compartilhado',
+          }}
+          casalId={casalId}
+          onClose={() => setEditando(null)}
+          onSalvo={() => { carregar(); setEditando(null); }}
+        />
+      )}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { LancarGasto } from './LancarGasto';
 import { Convite } from './Convite';
+import { EditarLancamento } from './EditarLancamento';
 import { Historico } from './Historico';
 import { ContasPagar } from './ContasPagar';
 import { Nos } from './Nos';
@@ -43,6 +44,7 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
   const [valoresVisiveis, setValoresVisiveis] = useState(true);
   const [aba, setAba] = useState('inicio');
   const [modalLancar, setModalLancar] = useState(false);
+  const [editandoLanc, setEditandoLanc] = useState<Lancamento | null>(null);
   const [modalConvite, setModalConvite] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -274,6 +276,15 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
 
       {modalConvite && casalId && (
         <Convite userId={userId} casalId={casalId} onClose={() => setModalConvite(false)} />
+      )}
+
+      {editandoLanc && casalId && (
+        <EditarLancamento
+          lancamento={editandoLanc}
+          casalId={casalId}
+          onClose={() => setEditandoLanc(null)}
+          onSalvo={() => { carregarDados(); setEditandoLanc(null); }}
+        />
       )}
 
       {modalLancar && casalId && (
