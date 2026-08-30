@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { LancarGasto } from './LancarGasto';
 import { Convite } from './Convite';
+import { Historico } from './Historico';
 import { ContasPagar } from './ContasPagar';
 import { Nos } from './Nos';
-import { Eye, EyeOff, Plus, Home, CreditCard, FileText, Heart, LogOut, UserPlus } from 'lucide-react';
+import { Eye, EyeOff, Plus, Home, CreditCard, FileText, Heart, LogOut, UserPlus, History } from 'lucide-react';
 
 interface DashboardProps {
   userId: string;
@@ -251,6 +252,9 @@ export function Dashboard({ userId, onSignOut }: DashboardProps) {
           </div>
         </div>
       )}
+
+      {/* HISTÓRICO */}
+      {aba === 'historico' && casalId && <Historico userId={userId} casalId={casalId} />}
 
       {/* CONTAS */}
       {aba === 'contas' && casalId && <ContasPagar userId={userId} casalId={casalId} />}
