@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Plus, Check, AlertCircle, Clock } from 'lucide-react';
+import { Plus, Check, X } from 'lucide-react';
 
 interface ContasPagarProps {
   userId: string;
@@ -134,7 +134,12 @@ export function ContasPagar({ userId, casalId }: ContasPagarProps) {
           <div onClick={() => setModalNova(false)} style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.75)' }} />
           <div style={{ position: 'relative', backgroundColor: '#0d0d0d', borderRadius: '20px 20px 0 0', border: '1px solid rgba(212,175,55,0.2)', padding: '20px 20px 40px' }}>
             <div style={{ width: 40, height: 4, backgroundColor: '#333', borderRadius: 2, margin: '0 auto 20px' }} />
-            <h3 style={{ color: '#F2EFE6', margin: '0 0 20px 0' }}>Nova conta</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <h3 style={{ color: '#F2EFE6', margin: 0 }}>Nova conta</h3>
+              <button onClick={() => setModalNova(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#8A8578', padding: 4 }}>
+                <X size={22} />
+              </button>
+            </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div>
